@@ -1,6 +1,14 @@
-﻿namespace LibraryAPI.Data
+﻿using Microsoft.EntityFrameworkCore;
+using LibraryAPI.Models;
+
+namespace LibraryAPI.Data
 {
-    public class Class
+    public class LibraryContext : DbContext
     {
+        public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
+        {
+        }
+
+        public DbSet<Book> Books { get; set; }
     }
 }
