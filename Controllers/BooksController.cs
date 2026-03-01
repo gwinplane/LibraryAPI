@@ -5,9 +5,13 @@ using LibraryAPI.Models;
 
 namespace LibraryAPI.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class BooksController : ControllerBase
+    [ApiController] //говорит ASP.NET Core: "этот класс является контроллером для API".
+                    //Включает много удобных вещей автоматически — например автоматическую проверку данных
+
+    [Route("api/[controller]")] //задаёт адрес. `[controller]` автоматически заменяется на имя класса без слова "Controller":
+                                //BooksController → Books → адрес: api/books
+
+    public class BooksController : ControllerBase //базовый класс из ASP.NET
     {
         private readonly LibraryContext _context;
 

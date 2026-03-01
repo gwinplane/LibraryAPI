@@ -8,5 +8,9 @@
         public string ISBN { get; set; } = string.Empty;
         public int TotalCopies { get; set; }
         public int AvailableCopies { get; set; }
+
+        // Связь с автором
+        public int AuthorId { get; set; }
+        public Author? Author { get; set; }
     }
 }
