@@ -1,27 +1,38 @@
 using Microsoft.EntityFrameworkCore;
 using LibraryAPI.Data;
 
-var builder = WebApplication.CreateBuilder(args); //→ наняли прораба
+var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
-builder.Services.AddControllers(); //→ возьми инструмент контроллеров
-builder.Services.AddOpenApi(); //→ возьми инструмент документации
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-// Подключаем MySQL
+// Добавляем CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<LibraryContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-var app = builder.Build(); //→ прораб построил дом, дом готов к работе
+var app = builder.Build();
 
-// Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment()) //если мы в режиме разработки
+if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi(); //документация
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection(); //перенаправить на HTTPS если нужно
-app.UseAuthorization(); //проверить есть ли доступ
-app.MapControllers(); //подключить маршруты контроллеров
+app.UseHttpsRedirection();
+app.UseCors(); // применяем CORS
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
