@@ -20,11 +20,21 @@ namespace LibraryAPI.Controllers
             _context = context;
         }
 
-        // GET: api/books
+        // GET: api/books?title=война&available=true
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
+        public async Task<ActionResult<IEnumerable<Book>>> GetBooks(
+            [FromQuery] string? title,
+            [FromQuery] bool? available)
         {
-            return await _context.Books.ToListAsync();
+            var query = _context.Books.AsQueryable();
+
+            if (!string.IsNullOrEmpty(title))
+                query = query.Where(b => b.Title.Contains(title));
+
+            if (available == true)
+                query = query.Where(b => b.AvailableCopies > 0);
+
+            return await query.ToListAsync();
         }
 
         // GET: api/books/1
